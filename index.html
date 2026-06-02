@@ -154,5 +154,14 @@
   });
 </script>
 
+<script>
+  // Auto fullscreen saat dashboard dibuka di browser
+  document.addEventListener('DOMContentLoaded', () => {
+    if (document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
+  });
+</script>
+
 </body>
 </html>
