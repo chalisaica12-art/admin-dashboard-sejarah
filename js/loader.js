@@ -9,20 +9,30 @@ async function loadDashboard() {
     const { count, error } = await sb.from(tables[i]).select('*', { count: 'exact', head: true });
     document.getElementById(ids[i]).textContent = error ? '?' : (count || 0).toLocaleString();
   }
-  const { data } = await sb.from('quiz_scores').select('*').order('played_at', { ascending: false }).limit(8);
+  // ✅ PERBAIKAN: JOIN dengan profiles untuk ambil nama user
+  const { data } = await sb
+    .from('quiz_scores')
+    .select(`
+      *,
+      profiles (name)
+    `)
+    .order('played_at', { ascending: false })
+    .limit(8);
   const tbody = document.getElementById('recent-scores');
   if (!data || !data.length) {
     tbody.innerHTML = '<tr class="loading-row"><td colspan="7">Belum ada skor</td></tr>';
     return;
   }
+  // ✅ PERBAIKAN: Tampilkan nama user dari hasil JOIN
   tbody.innerHTML = data.map((r, i) => `<tr>
     <td class="row-num">${i + 1}</td>
-    <td style="font-size:11px">${shortId(r.user_id)}</td>
+    <td style="font-size:11px"><strong>${r.profiles?.name || shortId(r.user_id)}</strong></td>
     <td><strong>${r.score || 0}</strong></td>
     <td>${r.correct_answers || 0}</td>
     <td>${r.total_questions || 0}</td>
     <td>${starIcons(r.stars_earned)}</td>
-    <td style="font-size:11px">${fmtDate(r.played_at)}</td></tr>`).join('');
+    <td style="font-size:11px">${fmtDate(r.played_at)}</td>
+  </tr>`).join('');
 }
 
 async function loadUsers() {
@@ -73,11 +83,31 @@ async function loadAvatars() {
   renderTable('avatars');
 }
 
+// ✅ PERBAIKAN: Fungsi loadScores dengan JOIN ke profiles
 async function loadScores() {
   const s = initTableState('scores');
-  const { data, error } = await sb.from('quiz_scores').select('*').order('score', { ascending: false });
-  if (error) { toast('Gagal memuat skor: ' + error.message, 'error'); return; }
-  s.data = data || []; s.filtered = [...s.data]; s.page = 1;
+  const { data, error } = await sb
+    .from('quiz_scores')
+    .select(`
+      *,
+      profiles (name)
+    `)
+    .order('score', { ascending: false });
+  
+  if (error) { 
+    toast('Gagal memuat skor: ' + error.message, 'error'); 
+    return; 
+  }
+  
+  // Format data dengan menambahkan user_name dari hasil JOIN
+  const formattedData = (data || []).map(item => ({
+    ...item,
+    user_name: item.profiles?.name || shortId(item.user_id)
+  }));
+  
+  s.data = formattedData;
+  s.filtered = [...formattedData];
+  s.page = 1;
   renderTable('scores');
 }
 

@@ -2,6 +2,32 @@
 // TABEL: FILTER, SORT, PAGINATION, RENDER
 // ============================================================
 
+// ---- GLOBAL STATE ----
+const tableStates = {};
+
+function initTableState(key) {
+  if (!tableStates[key]) {
+    tableStates[key] = {
+      data: [],
+      filtered: [],
+      sortCol: null,
+      sortDir: 'asc',
+      page: 1,
+      perPage: 10
+    };
+  }
+  return tableStates[key];
+}
+
+function updateTableState(key, data) {
+  const s = initTableState(key);
+  s.data = data;
+  s.filtered = [...data];
+  s.page = 1;
+  if (key === 'scores') renderTable(key);
+  else filterTable(key);
+}
+
 // ---- FILTER ----
 function filterTable(key) {
   const s = initTableState(key);
@@ -116,6 +142,22 @@ function iconHtml(name, style = '') {
   return `<span class="material-icons" style="font-size:14px;${style}">${name}</span>`;
 }
 
+// ✅ FUNGSI BARU: Format durasi (detik ke MM:SS)
+function formatDuration(seconds) {
+  if (!seconds && seconds !== 0) return '-';
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}
+
+// ✅ FUNGSI BARU: Ambil nama user dari user_id (fallback ke shortId)
+function getUserName(userId, profilesMap) {
+  if (profilesMap && profilesMap[userId]) {
+    return profilesMap[userId];
+  }
+  return shortId(userId);
+}
+
 // ---- RENDER ----
 function renderTable(key) {
   const s = initTableState(key);
@@ -150,7 +192,8 @@ function renderTable(key) {
       <td><span class="badge badge-gold">Lv ${r.level || 0}</span></td>
       <td>${(r.xp || 0).toLocaleString()} XP</td>
       <td>${iconHtml('star', 'color:#D4A017')} ${r.stars || 0}</td>
-      <td>${actions('users', r.id)}</td></tr>`,
+      <td>${actions('users', r.id)}</td>
+    </tr>`,
 
     eras: (r, i) => `<tr>
       <td class="row-num">${r.order_number || start + i + 1}</td>
@@ -161,7 +204,8 @@ function renderTable(key) {
       <td><span class="badge ${r.is_locked ? 'badge-red' : 'badge-green'}">
         ${r.is_locked ? iconHtml('lock') + ' Terkunci' : iconHtml('lock_open') + ' Aktif'}
       </span></td>
-      <td>${actions('eras', r.id)}</td></tr>`,
+      <td>${actions('eras', r.id)}</td>
+    </tr>`,
 
     quizzes: (r, i) => `<tr>
       <td class="row-num">${r.order_number || start + i + 1}</td>
@@ -174,7 +218,8 @@ function renderTable(key) {
       <td><span class="badge ${r.is_locked ? 'badge-red' : 'badge-green'}">
         ${r.is_locked ? iconHtml('lock') : iconHtml('lock_open')}
       </span></td>
-      <td>${actions('quizzes', r.id)}</td></tr>`,
+      <td>${actions('quizzes', r.id)}</td>
+    </tr>`,
 
     questions: (r, i) => `<tr>
       <td class="row-num">${r.order_num || start + i + 1}</td>
@@ -185,7 +230,8 @@ function renderTable(key) {
       <td style="font-size:11px">${r.option_c || '-'}</td>
       <td style="font-size:11px">${r.option_d || '-'}</td>
       <td><span class="badge badge-green">${iconHtml('check')} ${r.correct_answer || '-'}</span></td>
-      <td>${actions('questions', r.id)}</td></tr>`,
+      <td>${actions('questions', r.id)}</td>
+    </tr>`,
 
     avatars: (r, i) => `<tr>
       <td class="row-num">${start + i + 1}</td>
@@ -195,18 +241,21 @@ function renderTable(key) {
       <td><span class="badge ${r.is_default ? 'badge-green' : 'badge-gold'}">
         ${r.is_default ? iconHtml('check') + ' Default' : 'Premium'}
       </span></td>
-      <td>${actions('avatars', r.id)}</td></tr>`,
+      <td>${actions('avatars', r.id)}</td>
+    </tr>`,
 
+    // ✅ SCORES RENDERER - DIPERBAIKI (tampilkan nama user)
     scores: (r, i) => `<tr>
       <td class="row-num">${start + i + 1}</td>
-      <td style="font-size:11px;color:var(--text2)">${shortId(r.user_id)}</td>
+      <td style="font-size:11px"><strong>${r.user_name || shortId(r.user_id)}</strong></td>
       <td><strong>${r.score || 0}</strong></td>
       <td>${r.correct_answers || 0}</td>
       <td>${r.total_questions || 0}</td>
       <td>${starIcons(r.stars_earned)}</td>
-      <td>${r.duration_seconds ? r.duration_seconds + 's' : '-'}</td>
+      <td>${formatDuration(r.duration_seconds)}</td>
       <td style="font-size:11px">${fmtDate(r.played_at)}</td>
-      <td>${delBtn('quiz_scores', r.id)}</td></tr>`,
+      <td>${delBtn('quiz_scores', r.id)}</td>
+    </tr>`,
 
     progress: (r, i) => `<tr>
       <td class="row-num">${start + i + 1}</td>
@@ -218,7 +267,8 @@ function renderTable(key) {
           ? iconHtml('check_circle', 'color:#065f46') + ' Selesai'
           : iconHtml('hourglass_empty', 'color:#92400e') + ' Proses'}
       </span></td>
-      <td style="font-size:11px">${fmtDate(r.completed_st)}</td></tr>`,
+      <td style="font-size:11px">${fmtDate(r.completed_st)}</td>
+    </tr>`,
   };
 
   const renderer = renderers[key];
