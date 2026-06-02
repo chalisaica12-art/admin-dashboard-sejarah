@@ -1,0 +1,37 @@
+<!-- ===== HALAMAN PROGRESS PENGGUNA ===== -->
+<div id="page-progress" class="page-section">
+  <div class="section-header">
+    <div>
+      <h2><span class="material-icons" style="font-size:22px;vertical-align:middle">trending_up</span> Progress Pengguna</h2>
+      <p>Data progres per era &amp; chapter</p>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="table-toolbar">
+      <div class="search-box">
+        <input type="text" id="search-progress" placeholder="Cari user ID / era..." oninput="filterTable('progress')">
+      </div>
+      <select class="filter-select" id="filter-progress-completed" onchange="filterTable('progress')">
+        <option value="">Semua Status</option>
+        <option value="true">Selesai</option>
+        <option value="false">Belum Selesai</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortTable('progress','no')"># <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('progress','user_id')">User ID <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('progress','era_id')">Era <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('progress','chapter_index')">Chapter <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('progress','completed')">Status <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('progress','completed_st')">Diselesaikan <span class="sort-arrow">↕</span></th>
+          </tr>
+        </thead>
+        <tbody id="table-progress"><tr class="loading-row"><td colspan="6">Memuat data...</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination-progress"></div>
+  </div>
+</div>

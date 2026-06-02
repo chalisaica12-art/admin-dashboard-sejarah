@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Perjalanan Sejarah Indonesia</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ===== SIDEBAR ===== -->
+<nav id="sidebar">
+  <div class="sb-brand">
+    <h1>
+      <span class="material-icons" style="font-size:20px;vertical-align:middle">account_balance</span>
+      Sejarah<br>Indonesia Admin
+    </h1>
+    <p>Dashboard Pengelola</p>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">Utama</div>
+    <button class="sb-item active" onclick="navigate('dashboard')">
+      <span class="material-icons" style="font-size:18px">dashboard</span> Dashboard
+    </button>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">Manajemen</div>
+    <button class="sb-item" onclick="navigate('users')">
+      <span class="material-icons" style="font-size:18px">group</span> Pengguna
+    </button>
+    <button class="sb-item" onclick="navigate('eras')">
+      <span class="material-icons" style="font-size:18px">museum</span> Era Sejarah
+    </button>
+    <button class="sb-item" onclick="navigate('quizzes')">
+      <span class="material-icons" style="font-size:18px">quiz</span> Kuis &amp; Materi
+    </button>
+    <button class="sb-item" onclick="navigate('questions')">
+      <span class="material-icons" style="font-size:18px">help_outline</span> Soal
+    </button>
+    <button class="sb-item" onclick="navigate('avatars')">
+      <span class="material-icons" style="font-size:18px">face</span> Avatar
+    </button>
+  </div>
+  <div class="sb-section">
+    <div class="sb-label">Laporan</div>
+    <button class="sb-item" onclick="navigate('scores')">
+      <span class="material-icons" style="font-size:18px">emoji_events</span> Skor &amp; Leaderboard
+    </button>
+    <button class="sb-item" onclick="navigate('progress')">
+      <span class="material-icons" style="font-size:18px">trending_up</span> Progress Pengguna
+    </button>
+  </div>
+  <div class="sb-footer">v1.0 · Supabase Connected</div>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<div id="main">
+  <div id="topbar">
+    <span class="topbar-title" id="page-title">Dashboard</span>
+    <div class="topbar-right">
+      <span id="db-status" class="topbar-badge">
+        <span class="material-icons" style="font-size:14px;vertical-align:middle">bolt</span> Menghubungkan...
+      </span>
+      <strong style="font-size:14px;color:var(--red-dark)">Admin</strong>
+    </div>
+  </div>
+
+  <div id="content">
+
+    <!-- Setup Alert -->
+    <div id="setup-alert">
+      <span class="material-icons" style="font-size:16px;vertical-align:middle">settings</span>
+      <strong>Konfigurasi Supabase:</strong> Edit <code>SUPABASE_URL</code> dan <code>SUPABASE_ANON_KEY</code>
+      di file <code>js/config.js</code>, lalu refresh halaman.
+      <button onclick="this.parentElement.style.display='none'"
+        style="float:right;background:none;border:none;cursor:pointer;">
+        <span class="material-icons" style="font-size:18px">close</span>
+      </button>
+    </div>
+
+    <!-- Halaman-halaman dimuat di sini -->
+    <div id="pages-container"></div>
+
+  </div>
+</div>
+
+<!-- ===== TOAST ===== -->
+<div id="toast"></div>
+
+<!-- ===== KONFIRMASI HAPUS ===== -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <h3>
+      <span class="material-icons" style="font-size:22px;color:#c0392b;vertical-align:middle">warning</span>
+      Konfirmasi Hapus
+    </h3>
+    <p id="confirm-msg">Yakin ingin menghapus data ini?</p>
+    <div class="confirm-btns">
+      <button class="btn btn-secondary" onclick="closeConfirm()">Batal</button>
+      <button class="btn btn-danger" id="confirm-ok-btn">Hapus</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL FORM ===== -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modal-title">Form</h2>
+      <button class="btn-close" onclick="closeModal()">
+        <span class="material-icons" style="font-size:18px">close</span>
+      </button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Batal</button>
+      <button class="btn btn-primary" id="modal-save-btn" onclick="saveModal()">
+        <span class="material-icons" style="font-size:15px;vertical-align:middle">save</span> Simpan
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== JAVASCRIPT ===== -->
+<!-- Urutan penting: config dulu, baru yang lain -->
+<script src="js/config.js"></script>
+<script src="js/state.js"></script>
+<script src="js/table.js"></script>
+<script src="js/loader.js"></script>
+<script src="js/crud.js"></script>
+<script src="js/main.js"></script>
+
+<!-- Load semua halaman secara dinamis -->
+<script>
+  const pages = ['dashboard','users','eras','quizzes','questions','avatars','scores','progress'];
+  const container = document.getElementById('pages-container');
+  Promise.all(pages.map(p =>
+    fetch(`pages/${p}.html`).then(r => r.text())
+  )).then(htmls => {
+    container.innerHTML = htmls.join('');
+    // Setelah semua halaman dimuat, baru inisialisasi
+    checkConnection();
+    loadDashboard();
+  });
+</script>
+
+</body>
+</html>

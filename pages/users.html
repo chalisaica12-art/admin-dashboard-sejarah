@@ -1,0 +1,47 @@
+<!-- ===== HALAMAN PENGGUNA ===== -->
+<div id="page-users" class="page-section">
+  <div class="section-header">
+    <div>
+      <h2><span class="material-icons" style="font-size:22px;vertical-align:middle">group</span> Pengguna</h2>
+      <p>Kelola akun pengguna aplikasi</p>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="table-toolbar">
+      <div class="search-box">
+        <input type="text" id="search-users" placeholder="Cari nama / username..." oninput="filterTable('users')">
+      </div>
+      <select class="filter-select" id="filter-users-level" onchange="filterTable('users')">
+        <option value="">Semua Level</option>
+        <option value="1">Level 1</option>
+        <option value="2">Level 2</option>
+        <option value="3">Level 3</option>
+        <option value="4">Level 4</option>
+        <option value="5">Level 5+</option>
+      </select>
+      <div class="ml-auto">
+        <button class="btn btn-primary btn-sm" onclick="openModal('user')">
+          <span class="material-icons" style="font-size:15px;vertical-align:middle">add</span> Tambah
+        </button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortTable('users','no')"># <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('users','name')">Nama <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('users','username')">Username <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('users','email')">Email <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('users','level')">Level <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('users','xp')">XP <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('users','stars')">Bintang <span class="sort-arrow">↕</span></th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="table-users"><tr class="loading-row"><td colspan="8">Memuat data...</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination-users"></div>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<!-- ===== HALAMAN SKOR & LEADERBOARD ===== -->
+<div id="page-scores" class="page-section">
+  <div class="section-header">
+    <div>
+      <h2><span class="material-icons" style="font-size:22px;vertical-align:middle">emoji_events</span> Skor &amp; Leaderboard</h2>
+      <p>Data skor kuis pengguna</p>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="table-toolbar">
+      <div class="search-box">
+        <input type="text" id="search-scores" placeholder="Cari user ID..." oninput="filterTable('scores')">
+      </div>
+      <select class="filter-select" id="filter-scores-stars" onchange="filterTable('scores')">
+        <option value="">Semua Bintang</option>
+        <option value="3">3 Bintang</option>
+        <option value="2">2 Bintang</option>
+        <option value="1">1 Bintang</option>
+        <option value="0">0 Bintang</option>
+      </select>
+      <div class="ml-auto">
+        <button class="btn btn-danger btn-sm" onclick="navigate('scores')">
+          <span class="material-icons" style="font-size:15px;vertical-align:middle">refresh</span> Refresh
+        </button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortTable('scores','no')"># <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('scores','user_id')">User ID <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('scores','score')">Skor <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('scores','correct_answers')">Benar <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('scores','total_questions')">Total Soal <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('scores','stars_earned')">Bintang <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('scores','duration_seconds')">Durasi <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('scores','played_at')">Dimainkan <span class="sort-arrow">↕</span></th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="table-scores"><tr class="loading-row"><td colspan="9">Memuat data...</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination-scores"></div>
+  </div>
+</div>

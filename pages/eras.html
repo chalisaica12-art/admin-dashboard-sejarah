@@ -1,0 +1,43 @@
+<!-- ===== HALAMAN ERA SEJARAH ===== -->
+<div id="page-eras" class="page-section">
+  <div class="section-header">
+    <div>
+      <h2><span class="material-icons" style="font-size:22px;vertical-align:middle">museum</span> Era Sejarah</h2>
+      <p>CRUD era di halaman utama</p>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="table-toolbar">
+      <div class="search-box">
+        <input type="text" id="search-eras" placeholder="Cari judul era..." oninput="filterTable('eras')">
+      </div>
+      <select class="filter-select" id="filter-eras-locked" onchange="filterTable('eras')">
+        <option value="">Semua Status</option>
+        <option value="false">Tidak Terkunci</option>
+        <option value="true">Terkunci</option>
+      </select>
+      <div class="ml-auto">
+        <button class="btn btn-primary btn-sm" onclick="openModal('era')">
+          <span class="material-icons" style="font-size:15px;vertical-align:middle">add</span> Tambah Era
+        </button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortTable('eras','order_number')"># <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('eras','title')">Judul <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('eras','category')">Kategori <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('eras','mode')">Mode <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('eras','participants_count')">Peserta <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('eras','is_locked')">Status <span class="sort-arrow">↕</span></th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="table-eras"><tr class="loading-row"><td colspan="7">Memuat data...</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination-eras"></div>
+  </div>
+</div>

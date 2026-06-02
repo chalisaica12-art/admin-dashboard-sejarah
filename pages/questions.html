@@ -1,0 +1,40 @@
+<!-- ===== HALAMAN SOAL ===== -->
+<div id="page-questions" class="page-section">
+  <div class="section-header">
+    <div>
+      <h2><span class="material-icons" style="font-size:22px;vertical-align:middle">help_outline</span> Soal</h2>
+      <p>CRUD soal per era</p>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="table-toolbar">
+      <div class="search-box">
+        <input type="text" id="search-questions" placeholder="Cari teks soal..." oninput="filterTable('questions')">
+      </div>
+      <select class="filter-select" id="filter-questions-era" onchange="filterTable('questions')">
+        <option value="">Semua Era</option>
+      </select>
+      <div class="ml-auto">
+        <button class="btn btn-primary btn-sm" onclick="openModal('question')">
+          <span class="material-icons" style="font-size:15px;vertical-align:middle">add</span> Tambah Soal
+        </button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortTable('questions','order_num')"># <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('questions','era_id')">Era <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('questions','question_text')" style="width:30%">Pertanyaan <span class="sort-arrow">↕</span></th>
+            <th>Pilihan A</th><th>Pilihan B</th><th>Pilihan C</th><th>Pilihan D</th>
+            <th onclick="sortTable('questions','correct_answer')">Jawaban <span class="sort-arrow">↕</span></th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="table-questions"><tr class="loading-row"><td colspan="9">Memuat data...</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination-questions"></div>
+  </div>
+</div>

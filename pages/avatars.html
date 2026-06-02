@@ -1,0 +1,42 @@
+<!-- ===== HALAMAN AVATAR ===== -->
+<div id="page-avatars" class="page-section">
+  <div class="section-header">
+    <div>
+      <h2><span class="material-icons" style="font-size:22px;vertical-align:middle">face</span> Avatar</h2>
+      <p>Kelola avatar yang tersedia</p>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="table-toolbar">
+      <div class="search-box">
+        <input type="text" id="search-avatars" placeholder="Cari nama avatar..." oninput="filterTable('avatars')">
+      </div>
+      <select class="filter-select" id="filter-avatars-default" onchange="filterTable('avatars')">
+        <option value="">Semua</option>
+        <option value="true">Default</option>
+        <option value="false">Premium</option>
+      </select>
+      <div class="ml-auto">
+        <button class="btn btn-primary btn-sm" onclick="openModal('avatar')">
+          <span class="material-icons" style="font-size:15px;vertical-align:middle">add</span> Tambah Avatar
+        </button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th onclick="sortTable('avatars','id')"># <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('avatars','name')">Nama <span class="sort-arrow">↕</span></th>
+            <th>Path Gambar</th>
+            <th onclick="sortTable('avatars','price_stars')">Harga (Bintang) <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('avatars','is_default')">Default <span class="sort-arrow">↕</span></th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="table-avatars"><tr class="loading-row"><td colspan="6">Memuat data...</td></tr></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination-avatars"></div>
+  </div>
+</div>
