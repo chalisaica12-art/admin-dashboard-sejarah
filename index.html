@@ -56,9 +56,6 @@
     <button class="sb-item" onclick="navigate('scores')">
       <span class="material-icons" style="font-size:18px">emoji_events</span> Skor &amp; Leaderboard
     </button>
-    <button class="sb-item" onclick="navigate('progress')">
-      <span class="material-icons" style="font-size:18px">trending_up</span> Progress Pengguna
-    </button>
   </div>
   <div class="sb-footer">v1.0 · Supabase Connected</div>
 </nav>
@@ -132,7 +129,7 @@
 
 <!-- Load semua halaman secara dinamis -->
 <script>
-  const pages = ['dashboard','users','eras','quizzes','questions','avatars','scores','progress'];
+  const pages = ['dashboard','users','eras','quizzes','questions','avatars','scores',];
   const container = document.getElementById('pages-container');
   Promise.all(pages.map(p =>
     fetch(`pages/${p}.html`).then(r => r.text())

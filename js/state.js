@@ -99,3 +99,4 @@ async function checkConnection() {
     el.style.color = '#991b1b';
   }
 }
+
