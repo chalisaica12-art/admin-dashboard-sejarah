@@ -33,7 +33,6 @@ const FORMS = {
     fields: [
       { name: 'era_id',       label: 'Era',          type: 'select-era', required: true },
       { name: 'title',        label: 'Judul Materi', type: 'text',       required: true },
-      { name: 'image',        label: 'Path Gambar',  type: 'text' },
       { name: 'order_number', label: 'Nomor Urut',   type: 'number',     required: true },
     ]
   },

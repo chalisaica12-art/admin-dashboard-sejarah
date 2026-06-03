@@ -196,11 +196,11 @@ function renderTable(key) {
       <td>${actions('eras', r.id)}</td>
     </tr>`,
 
+    // ========== MATERIALS (PERBAIKAN: image dihapus) ==========
     materials: (r, i) => `<tr>
       <td class="row-num">${r.order_number || start + i + 1}</td>
       <td><span class="badge badge-gold">${r.era_title || shortId(r.era_id)}</span></td>
       <td><strong>${r.title || '-'}</strong></td>
-      <td style="font-size:11px;color:var(--text3)">${r.image || '-'}</td>
       <td>${actions('materials', r.id)}</td>
     </tr>`,
 
