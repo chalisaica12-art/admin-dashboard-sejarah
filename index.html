@@ -129,15 +129,15 @@
 
 <!-- Load semua halaman secara dinamis -->
 <script>
-  const pages = ['dashboard','users','eras','quizzes','questions','avatars','scores',];
+  const pages = ['dashboard','users','eras','quizzes','questions','avatars','scores'];
   const container = document.getElementById('pages-container');
   Promise.all(pages.map(p =>
     fetch(`pages/${p}.html`).then(r => r.text())
   )).then(htmls => {
     container.innerHTML = htmls.join('');
     // Setelah semua halaman dimuat, baru inisialisasi
-    checkConnection();
-    loadDashboard();
+    if (typeof checkConnection === 'function') checkConnection();
+    if (typeof loadDashboard === 'function') loadDashboard();
   });
 </script>
 

@@ -1,41 +1,38 @@
-<div id="page-questions" class="page-section">
+<!-- ===== HALAMAN KUIS & MATERI ===== -->
+<div id="page-quizzes" class="page-section">
   <div class="section-header">
     <div>
-      <h2><span class="material-icons" style="font-size:22px;vertical-align:middle">help_outline</span> Soal</h2>
-      <p>Manajemen soal per materi</p>
+      <h2><span class="material-icons" style="font-size:22px;vertical-align:middle">menu_book</span> Kuis &amp; Materi</h2>
+      <p>CRUD materi per era</p>
     </div>
   </div>
   <div class="table-card">
     <div class="table-toolbar">
       <div class="search-box">
-        <input type="text" id="search-questions" placeholder="Cari teks soal..." oninput="filterTable('questions')">
+        <input type="text" id="search-materials" placeholder="Cari judul materi..." oninput="filterTable('materials')">
       </div>
-      <select class="filter-select" id="filter-questions-era" onchange="filterTable('questions')">
+      <select class="filter-select" id="filter-materials-era" onchange="filterTable('materials')">
         <option value="">Semua Era</option>
       </select>
       <div class="ml-auto">
-        <button class="btn btn-primary btn-sm" onclick="openModal('question')">
-          <span class="material-icons" style="font-size:15px;vertical-align:middle">add</span> Tambah Soal
+        <button class="btn btn-primary btn-sm" onclick="openModal('material')">
+          <span class="material-icons" style="font-size:15px;vertical-align:middle">add</span> Tambah Materi
         </button>
       </div>
     </div>
     <div class="table-wrap">
-      <table>
+      <table class="data-table">
         <thead>
           <tr>
-            <th onclick="sortTable('questions','order_number')"># <span class="sort-arrow">↕</span></th>
-            <th onclick="sortTable('questions','era_id')">Era <span class="sort-arrow">↕</span></th>
-            <th style="width:25%">Pertanyaan</th>
-            <th>A</th><th>B</th><th>C</th><th>D</th>
-            <th onclick="sortTable('questions','correct_answer')">Jawaban <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('materials','order_number')"># <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('materials','era_title')">Era <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('materials','title')">Judul Materi <span class="sort-arrow">↕</span></th>
             <th>Aksi</th>
           </tr>
         </thead>
-        <tbody id="table-questions">
-          <tr class="loading-row"><td colspan="9">Memuat data...</td></tr>
-        </tbody>
+        <tbody id="table-materials"><tr class="loading-row"><td colspan="4">Memuat data...</td></tr></tbody>
       </table>
     </div>
-    <div class="pagination" id="pagination-questions"></div>
+    <div class="pagination" id="pagination-materials"></div>
   </div>
 </div>
