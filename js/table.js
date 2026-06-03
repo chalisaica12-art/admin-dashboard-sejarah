@@ -186,17 +186,16 @@ function renderTable(key) {
       <td>${actions('users', r.id)}</td>
     </tr>`,
 
+    // ✅ FIX: Hapus kolom image dari renderer eras
     eras: (r, i) => `<tr>
       <td class="row-num">${r.order_number || start + i + 1}</td>
       <td><strong>${r.title || '-'}</strong></td>
-      <td style="font-size:11px;color:var(--text3)">${r.image || '-'}</td>
       <td><span class="badge ${r.is_locked ? 'badge-red' : 'badge-green'}">
         ${r.is_locked ? iconHtml('lock') + ' Terkunci' : iconHtml('lock_open') + ' Aktif'}
       </span></td>
       <td>${actions('eras', r.id)}</td>
     </tr>`,
 
-    // ========== MATERIALS (PERBAIKAN: image dihapus) ==========
     materials: (r, i) => `<tr>
       <td class="row-num">${r.order_number || start + i + 1}</td>
       <td><span class="badge badge-gold">${r.era_title || shortId(r.era_id)}</span></td>
@@ -209,10 +208,6 @@ function renderTable(key) {
       <td><span class="badge badge-gold" style="font-size:10px">${r.era_title || shortId(r.era_id)}</span></td>
       <td><span class="badge badge-blue" style="font-size:10px">${r.material_title || shortId(r.material_id)}</span></td>
       <td style="font-size:12px;max-width:180px;word-break:break-word">${r.question_text || '-'}</td>
-      <td style="font-size:11px">${r.option_a || '-'}</td>
-      <td style="font-size:11px">${r.option_b || '-'}</td>
-      <td style="font-size:11px">${r.option_c || '-'}</td>
-      <td style="font-size:11px">${r.option_d || '-'}</td>
       <td><span class="badge badge-green">${iconHtml('check')} ${r.correct_answer || '-'}</span></td>
       <td>${actions('questions', r.id)}</td>
     </tr>`,
