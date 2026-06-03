@@ -46,7 +46,7 @@ function navigate(page) {
 
 // Cek koneksi Supabase
 function checkConnection() {
-  const statusEl = document.getElementById('connection-status');
+  const statusEl = document.getElementById('db-status'); // FIXED: was 'connection-status'
   if (!statusEl) return;
   
   sb.from('profiles').select('id', { count: 'exact', head: true })
