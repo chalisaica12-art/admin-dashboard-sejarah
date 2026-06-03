@@ -20,14 +20,22 @@ function initTableState(key) {
 
 // ---- NAVIGASI ----
 function navigate(page) {
+  // ✅ FIX: Cek apakah halaman sudah dimuat
+  const targetPage = document.getElementById('page-' + page);
+  if (!targetPage) {
+    console.warn('Halaman belum dimuat:', page);
+    return;
+  }
+
   document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
+  targetPage.classList.add('active');
   document.querySelectorAll('.sb-item').forEach(el => {
     if (el.getAttribute('onclick') && el.getAttribute('onclick').includes("'" + page + "'")) {
       el.classList.add('active');
     }
   });
+
   const titles = {
     dashboard: 'Dashboard',
     users: 'Pengguna',
@@ -38,8 +46,12 @@ function navigate(page) {
     scores: 'Skor & Leaderboard',
     progress: 'Progress Pengguna'
   };
-  document.getElementById('page-title').textContent = titles[page] || page;
+
+  const titleEl = document.getElementById('page-title');
+  if (titleEl) titleEl.textContent = titles[page] || page;
+
   STATE.currentPage = page;
+
   const loaders = {
     users: loadUsers,
     eras: loadEras,
@@ -56,6 +68,7 @@ function navigate(page) {
 // ---- TOAST NOTIFIKASI ----
 function toast(msg, type = 'success') {
   const t = document.getElementById('toast');
+  if (!t) return;
   const el = document.createElement('div');
   el.className = `toast-item toast-${type}`;
   el.textContent = msg;
@@ -81,6 +94,7 @@ function closeConfirm() {
 // ---- CEK KONEKSI SUPABASE ----
 async function checkConnection() {
   const el = document.getElementById('db-status');
+  if (!el) return;
   if (SUPABASE_URL.includes('YOUR_PROJECT_ID')) {
     el.innerHTML = '<span class="material-icons" style="font-size:14px;vertical-align:middle">warning</span> Belum Dikonfigurasi';
     el.style.background = '#fff3cd';
@@ -99,4 +113,3 @@ async function checkConnection() {
     el.style.color = '#991b1b';
   }
 }
-
