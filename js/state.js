@@ -55,7 +55,7 @@ function navigate(page) {
   const loaders = {
     users: loadUsers,
     eras: loadEras,
-    quizzes: loadQuizzes,
+    quizzes: loadMaterials,
     questions: loadQuestions,
     avatars: loadAvatars,
     scores: loadScores,
