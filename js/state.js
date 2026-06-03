@@ -20,7 +20,9 @@ function initTableState(key) {
 
 // ---- NAVIGASI ----
 function navigate(page) {
-  // ✅ FIX: Cek apakah halaman sudah dimuat
+  // Alias: materials → quizzes (karena page id masih page-quizzes)
+  if (page === 'materials') page = 'quizzes';
+
   const targetPage = document.getElementById('page-' + page);
   if (!targetPage) {
     console.warn('Halaman belum dimuat:', page);
@@ -41,6 +43,7 @@ function navigate(page) {
     users: 'Pengguna',
     eras: 'Era Sejarah',
     quizzes: 'Kuis & Materi',
+    materials: 'Kuis & Materi',
     questions: 'Soal',
     avatars: 'Avatar',
     scores: 'Skor & Leaderboard',
