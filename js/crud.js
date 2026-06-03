@@ -161,6 +161,12 @@ async function saveModal() {
   const btn = document.getElementById('modal-save-btn');
   btn.innerHTML = '<span class="material-icons" style="font-size:15px;vertical-align:middle">hourglass_empty</span> Menyimpan...';
   btn.disabled = true;
+
+  // Kalau avatar di-set default, reset semua avatar lain dulu
+  if (type === 'avatar' && payload.is_default === true) {
+    await sb.from('avatars').update({ is_default: false }).neq('id', STATE.editId || '00000000-0000-0000-0000-000000000000');
+  }
+
   let error;
   if (STATE.editId) {
     ({ error } = await sb.from(form.table).update(payload).eq('id', STATE.editId));
@@ -198,6 +204,12 @@ async function deleteRow(table, id) {
     if (error) { toast('Gagal hapus: ' + error.message, 'error'); return; }
     toast('Data berhasil dihapus!');
     const pageMap = { profiles: 'users', quizzes: 'eras', materials: 'materials', questions: 'questions', avatars: 'avatars', quiz_scores: 'scores' };
-    navigate(pageMap[tbl] || STATE.currentPage);
+    const targetPage = pageMap[tbl] || STATE.currentPage;
+    navigate(targetPage);
+    const reloadMap = {
+      profiles: loadUsers, quizzes: loadEras, materials: loadMaterials,
+      questions: loadQuestions, avatars: loadAvatars, quiz_scores: loadScores
+    };
+    if (reloadMap[tbl]) reloadMap[tbl]();
   });
 }
