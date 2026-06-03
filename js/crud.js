@@ -33,6 +33,7 @@ const FORMS = {
     fields: [
       { name: 'era_id',       label: 'Era',          type: 'select-era', required: true },
       { name: 'title',        label: 'Judul Materi', type: 'text',       required: true },
+      { name: 'image',        label: 'Path Gambar',  type: 'text' },
       { name: 'order_number', label: 'Nomor Urut',   type: 'number',     required: true },
     ]
   },
@@ -197,12 +198,6 @@ async function deleteRow(table, id) {
     if (error) { toast('Gagal hapus: ' + error.message, 'error'); return; }
     toast('Data berhasil dihapus!');
     const pageMap = { profiles: 'users', quizzes: 'eras', materials: 'materials', questions: 'questions', avatars: 'avatars', quiz_scores: 'scores' };
-    const targetPage = pageMap[tbl] || STATE.currentPage;
-navigate(targetPage);
-const reloadMap = {
-  profiles: loadUsers, quizzes: loadEras, materials: loadMaterials,
-  questions: loadQuestions, avatars: loadAvatars, quiz_scores: loadScores
-};
-if (reloadMap[tbl]) reloadMap[tbl]();
+    navigate(pageMap[tbl] || STATE.currentPage);
   });
 }
