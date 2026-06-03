@@ -1,9 +1,8 @@
-<!-- ===== HALAMAN SOAL ===== -->
 <div id="page-questions" class="page-section">
   <div class="section-header">
     <div>
       <h2><span class="material-icons" style="font-size:22px;vertical-align:middle">help_outline</span> Soal</h2>
-      <p>CRUD soal per era</p>
+      <p>Manajemen soal per materi</p>
     </div>
   </div>
   <div class="table-card">
@@ -24,15 +23,17 @@
       <table>
         <thead>
           <tr>
-            <th onclick="sortTable('questions','order_num')"># <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('questions','order_number')"># <span class="sort-arrow">↕</span></th>
             <th onclick="sortTable('questions','era_id')">Era <span class="sort-arrow">↕</span></th>
-            <th onclick="sortTable('questions','question_text')" style="width:30%">Pertanyaan <span class="sort-arrow">↕</span></th>
-            <th>Pilihan A</th><th>Pilihan B</th><th>Pilihan C</th><th>Pilihan D</th>
+            <th style="width:25%">Pertanyaan</th>
+            <th>A</th><th>B</th><th>C</th><th>D</th>
             <th onclick="sortTable('questions','correct_answer')">Jawaban <span class="sort-arrow">↕</span></th>
             <th>Aksi</th>
           </tr>
         </thead>
-        <tbody id="table-questions"><tr class="loading-row"><td colspan="9">Memuat data...</td></tr></tbody>
+        <tbody id="table-questions">
+          <tr class="loading-row"><td colspan="9">Memuat data...</td></tr>
+        </tbody>
       </table>
     </div>
     <div class="pagination" id="pagination-questions"></div>

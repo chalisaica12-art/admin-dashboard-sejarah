@@ -3,19 +3,17 @@
 // ============================================================
 
 async function loadDashboard() {
-  const tables = ['profiles', 'quizzes', 'questions', 'quiz_scores', 'avatars'];
-  const ids = ['stat-users', 'stat-quizzes', 'stat-questions', 'stat-scores', 'stat-avatars'];
+  const tables = ['profiles', 'quizzes', 'materials', 'questions', 'quiz_scores', 'avatars'];
+  const ids = ['stat-users', 'stat-quizzes', 'stat-materials', 'stat-questions', 'stat-scores', 'stat-avatars'];
   for (let i = 0; i < tables.length; i++) {
+    const el = document.getElementById(ids[i]);
+    if (!el) continue;
     const { count, error } = await sb.from(tables[i]).select('*', { count: 'exact', head: true });
-    document.getElementById(ids[i]).textContent = error ? '?' : (count || 0).toLocaleString();
+    el.textContent = error ? '?' : (count || 0).toLocaleString();
   }
-  // ✅ PERBAIKAN: JOIN dengan profiles untuk ambil nama user
   const { data } = await sb
     .from('quiz_scores')
-    .select(`
-      *,
-      profiles (name)
-    `)
+    .select(`*, profiles (name)`)
     .order('played_at', { ascending: false })
     .limit(8);
   const tbody = document.getElementById('recent-scores');
@@ -23,7 +21,6 @@ async function loadDashboard() {
     tbody.innerHTML = '<tr class="loading-row"><td colspan="7">Belum ada skor</td></tr>';
     return;
   }
-  // ✅ PERBAIKAN: Tampilkan nama user dari hasil JOIN
   tbody.innerHTML = data.map((r, i) => `<tr>
     <td class="row-num">${i + 1}</td>
     <td style="font-size:11px"><strong>${r.profiles?.name || shortId(r.user_id)}</strong></td>
@@ -51,26 +48,55 @@ async function loadEras() {
   renderTable('eras');
 }
 
-async function loadQuizzes() {
-  const s = initTableState('quizzes');
-  const { data, error } = await sb.from('quizzes').select('*').order('order_number');
-  if (error) { toast('Gagal memuat kuis: ' + error.message, 'error'); return; }
-  s.data = data || []; s.filtered = [...s.data]; s.page = 1;
-  renderTable('quizzes');
+// Ganti loadQuizzes → loadMaterials
+async function loadMaterials() {
+  const s = initTableState('materials');
+  const { data, error } = await sb
+    .from('materials')
+    .select(`*, quizzes(title)`)
+    .order('order_number');
+  if (error) { toast('Gagal memuat materi: ' + error.message, 'error'); return; }
+  const formatted = (data || []).map(m => ({
+    ...m,
+    era_title: m.quizzes?.title || shortId(m.era_id)
+  }));
+  s.data = formatted; s.filtered = [...formatted]; s.page = 1;
+
+  // Isi dropdown filter era
+  const { data: eras } = await sb.from('quizzes').select('id,title').order('order_number');
+  const sel = document.getElementById('filter-materials-era');
+  if (sel && eras) {
+    const prev = sel.value;
+    sel.innerHTML = `<option value="">Semua Era</option>` +
+      eras.map(e => `<option value="${e.id}" ${e.id === prev ? 'selected' : ''}>${e.title}</option>`).join('');
+  }
+  renderTable('materials');
 }
+
+// Tetap ada untuk backward compat
+async function loadQuizzes() { return loadMaterials(); }
 
 async function loadQuestions() {
   const s = initTableState('questions');
-  const { data, error } = await sb.from('questions').select('*').order('order_num');
+  const { data, error } = await sb
+    .from('questions')
+    .select(`*, quizzes(title), materials(title)`)
+    .order('order_number');
   if (error) { toast('Gagal memuat soal: ' + error.message, 'error'); return; }
-  s.data = data || []; s.filtered = [...s.data]; s.page = 1;
-  // Isi dropdown filter era secara dinamis
-  const eras = [...new Set((data || []).map(q => q.era_id).filter(Boolean))];
+  const formatted = (data || []).map(q => ({
+    ...q,
+    era_title: q.quizzes?.title || shortId(q.era_id),
+    material_title: q.materials?.title || shortId(q.material_id)
+  }));
+  s.data = formatted; s.filtered = [...formatted]; s.page = 1;
+
+  // Isi dropdown filter era
+  const { data: eras } = await sb.from('quizzes').select('id,title').order('order_number');
   const sel = document.getElementById('filter-questions-era');
-  if (sel) {
+  if (sel && eras) {
     const prev = sel.value;
     sel.innerHTML = `<option value="">Semua Era</option>` +
-      eras.map(e => `<option value="${e}" ${e === prev ? 'selected' : ''}>${e}</option>`).join('');
+      eras.map(e => `<option value="${e.id}" ${e.id === prev ? 'selected' : ''}>${e.title}</option>`).join('');
   }
   renderTable('questions');
 }
@@ -83,31 +109,18 @@ async function loadAvatars() {
   renderTable('avatars');
 }
 
-// ✅ PERBAIKAN: Fungsi loadScores dengan JOIN ke profiles
 async function loadScores() {
   const s = initTableState('scores');
   const { data, error } = await sb
     .from('quiz_scores')
-    .select(`
-      *,
-      profiles (name)
-    `)
+    .select(`*, profiles (name)`)
     .order('score', { ascending: false });
-  
-  if (error) { 
-    toast('Gagal memuat skor: ' + error.message, 'error'); 
-    return; 
-  }
-  
-  // Format data dengan menambahkan user_name dari hasil JOIN
+  if (error) { toast('Gagal memuat skor: ' + error.message, 'error'); return; }
   const formattedData = (data || []).map(item => ({
     ...item,
     user_name: item.profiles?.name || shortId(item.user_id)
   }));
-  
-  s.data = formattedData;
-  s.filtered = [...formattedData];
-  s.page = 1;
+  s.data = formattedData; s.filtered = [...formattedData]; s.page = 1;
   renderTable('scores');
 }
 

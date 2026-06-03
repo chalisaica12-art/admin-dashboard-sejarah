@@ -49,12 +49,9 @@ function filterTable(key) {
         if (!lk) return true;
         return String(row.is_locked) === lk;
       },
-      quizzes: () => {
-        const cat = document.getElementById('filter-quizzes-cat')?.value;
-        const lk = document.getElementById('filter-quizzes-locked')?.value;
-        const matchCat = !cat || (row.category && row.category.toLowerCase().includes(cat));
-        const matchLk = !lk || String(row.is_locked) === lk;
-        return matchCat && matchLk;
+      materials: () => {
+        const era = document.getElementById('filter-materials-era')?.value;
+        return !era || String(row.era_id) === era;
       },
       questions: () => {
         const era = document.getElementById('filter-questions-era')?.value;
@@ -141,20 +138,14 @@ function starIcons(n) {
 function iconHtml(name, style = '') {
   return `<span class="material-icons" style="font-size:14px;${style}">${name}</span>`;
 }
-
-// ✅ FUNGSI BARU: Format durasi (detik ke MM:SS)
 function formatDuration(seconds) {
   if (!seconds && seconds !== 0) return '-';
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 }
-
-// ✅ FUNGSI BARU: Ambil nama user dari user_id (fallback ke shortId)
 function getUserName(userId, profilesMap) {
-  if (profilesMap && profilesMap[userId]) {
-    return profilesMap[userId];
-  }
+  if (profilesMap && profilesMap[userId]) return profilesMap[userId];
   return shortId(userId);
 }
 
@@ -198,33 +189,26 @@ function renderTable(key) {
     eras: (r, i) => `<tr>
       <td class="row-num">${r.order_number || start + i + 1}</td>
       <td><strong>${r.title || '-'}</strong></td>
-      <td>${r.category || '-'}</td>
-      <td><span class="badge badge-blue">${r.mode || '-'}</span></td>
-      <td>${(r.participants_count || 0).toLocaleString()}</td>
+      <td style="font-size:11px;color:var(--text3)">${r.image || '-'}</td>
       <td><span class="badge ${r.is_locked ? 'badge-red' : 'badge-green'}">
         ${r.is_locked ? iconHtml('lock') + ' Terkunci' : iconHtml('lock_open') + ' Aktif'}
       </span></td>
       <td>${actions('eras', r.id)}</td>
     </tr>`,
 
-    quizzes: (r, i) => `<tr>
+    materials: (r, i) => `<tr>
       <td class="row-num">${r.order_number || start + i + 1}</td>
+      <td><span class="badge badge-gold">${r.era_title || shortId(r.era_id)}</span></td>
       <td><strong>${r.title || '-'}</strong></td>
-      <td>${r.category || '-'}</td>
-      <td><span class="badge badge-blue">${r.mode || '-'}</span></td>
-      <td>${r.age || '-'}</td>
-      <td>${iconHtml('star', 'color:#D4A017')} ${r.rating || '-'}</td>
-      <td>${(r.participants_count || 0).toLocaleString()}</td>
-      <td><span class="badge ${r.is_locked ? 'badge-red' : 'badge-green'}">
-        ${r.is_locked ? iconHtml('lock') : iconHtml('lock_open')}
-      </span></td>
-      <td>${actions('quizzes', r.id)}</td>
+      <td style="font-size:11px;color:var(--text3)">${r.image || '-'}</td>
+      <td>${actions('materials', r.id)}</td>
     </tr>`,
 
     questions: (r, i) => `<tr>
-      <td class="row-num">${r.order_num || start + i + 1}</td>
-      <td><span class="badge badge-gold">${r.era_id || '-'}</span></td>
-      <td style="font-size:12px;max-width:200px;word-break:break-word">${r.question_text || '-'}</td>
+      <td class="row-num">${r.order_number || start + i + 1}</td>
+      <td><span class="badge badge-gold" style="font-size:10px">${r.era_title || shortId(r.era_id)}</span></td>
+      <td><span class="badge badge-blue" style="font-size:10px">${r.material_title || shortId(r.material_id)}</span></td>
+      <td style="font-size:12px;max-width:180px;word-break:break-word">${r.question_text || '-'}</td>
       <td style="font-size:11px">${r.option_a || '-'}</td>
       <td style="font-size:11px">${r.option_b || '-'}</td>
       <td style="font-size:11px">${r.option_c || '-'}</td>
@@ -244,7 +228,6 @@ function renderTable(key) {
       <td>${actions('avatars', r.id)}</td>
     </tr>`,
 
-    // ✅ SCORES RENDERER - DIPERBAIKI (tampilkan nama user)
     scores: (r, i) => `<tr>
       <td class="row-num">${start + i + 1}</td>
       <td style="font-size:11px"><strong>${r.user_name || shortId(r.user_id)}</strong></td>

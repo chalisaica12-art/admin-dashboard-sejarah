@@ -1,9 +1,8 @@
-<!-- ===== HALAMAN ERA SEJARAH ===== -->
 <div id="page-eras" class="page-section">
   <div class="section-header">
     <div>
       <h2><span class="material-icons" style="font-size:22px;vertical-align:middle">museum</span> Era Sejarah</h2>
-      <p>CRUD era di halaman utama</p>
+      <p>Manajemen era sejarah untuk pengelompokan materi</p>
     </div>
   </div>
   <div class="table-card">
@@ -27,15 +26,14 @@
         <thead>
           <tr>
             <th onclick="sortTable('eras','order_number')"># <span class="sort-arrow">↕</span></th>
-            <th onclick="sortTable('eras','title')">Judul <span class="sort-arrow">↕</span></th>
-            <th onclick="sortTable('eras','category')">Kategori <span class="sort-arrow">↕</span></th>
-            <th onclick="sortTable('eras','mode')">Mode <span class="sort-arrow">↕</span></th>
-            <th onclick="sortTable('eras','participants_count')">Peserta <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('eras','title')">Judul Era <span class="sort-arrow">↕</span></th>
             <th onclick="sortTable('eras','is_locked')">Status <span class="sort-arrow">↕</span></th>
             <th>Aksi</th>
           </tr>
         </thead>
-        <tbody id="table-eras"><tr class="loading-row"><td colspan="7">Memuat data...</td></tr></tbody>
+        <tbody id="table-eras">
+          <tr class="loading-row"><td colspan="4">Memuat data...</td></tr>
+        </tbody>
       </table>
     </div>
     <div class="pagination" id="pagination-eras"></div>
