@@ -68,7 +68,10 @@
       <span id="db-status" class="topbar-badge">
         <span class="material-icons" style="font-size:14px;vertical-align:middle">bolt</span> Menghubungkan...
       </span>
-      <strong style="font-size:14px;color:var(--red-dark)">Admin</strong>
+      <strong style="font-size:14px;color:var(--red-dark)" id="admin-email">Admin</strong>
+      <button onclick="doLogout()" style="margin-left:12px;background:none;border:1px solid var(--red-dark);color:var(--red-dark);border-radius:8px;padding:4px 12px;font-size:12px;cursor:pointer;font-family:inherit;">
+        <span class="material-icons" style="font-size:13px;vertical-align:middle">logout</span> Keluar
+      </button>
     </div>
   </div>
 
@@ -116,13 +119,33 @@
 </div>
 
 <!-- ===== JAVASCRIPT ===== -->
-<!-- Urutan penting: config dulu, baru yang lain -->
 <script src="js/config.js"></script>
+
+<!-- ✅ CEK LOGIN — kalau belum login redirect ke login.html -->
+<script>
+  (async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      window.location.href = 'login.html';
+      return;
+    }
+    // Tampilkan email admin di topbar
+    const emailEl = document.getElementById('admin-email');
+    if (emailEl && session.user?.email) {
+      emailEl.textContent = session.user.email;
+    }
+  })();
+
+  async function doLogout() {
+    await sb.auth.signOut();
+    window.location.href = 'login.html';
+  }
+</script>
+
 <script src="js/state.js"></script>
 <script src="js/table.js"></script>
 <script src="js/loader.js"></script>
 <script src="js/crud.js"></script>
-<!-- main.js DIHAPUS karena duplikat STATE, navigate, toast dengan state.js -->
 
 <!-- Load semua halaman secara dinamis -->
 <script>
@@ -132,7 +155,6 @@
     fetch(`pages/${p}.html`).then(r => r.text())
   )).then(htmls => {
     container.innerHTML = htmls.join('');
-    // Setelah semua halaman dimuat, baru inisialisasi
     if (typeof checkConnection === 'function') checkConnection();
     if (typeof loadDashboard === 'function') loadDashboard();
   });

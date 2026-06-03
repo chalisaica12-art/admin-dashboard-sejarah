@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — Perjalanan Sejarah Indonesia</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red-dark: #73090D;
+      --red-mid: #8B0000;
+      --red-light: #D32F2F;
+      --cream: #FDE7E4;
+      --white: #ffffff;
+      --text: #1a1a1a;
+      --text2: #555;
+      --border: #e0c8c5;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--cream);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Background dekoratif */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -120px; right: -120px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(115,9,13,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      bottom: -100px; left: -100px;
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(115,9,13,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 28px;
+      padding: 44px 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(115,9,13,0.12), 0 4px 16px rgba(0,0,0,0.06);
+      animation: slideUp 0.5s cubic-bezier(.22,.68,0,1.2) both;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(32px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+
+    .logo-icon {
+      width: 48px; height: 48px;
+      background: linear-gradient(135deg, var(--red-dark), var(--red-light));
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(115,9,13,0.3);
+    }
+
+    .logo-icon .material-icons {
+      color: white;
+      font-size: 26px;
+    }
+
+    .logo-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: var(--red-dark);
+      line-height: 1.2;
+    }
+
+    .logo-text p {
+      font-size: 11px;
+      color: var(--text2);
+      margin-top: 1px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 28px;
+    }
+
+    h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: var(--text2);
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 7px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input[type="email"],
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 13px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text);
+      background: #fafafa;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--red-dark);
+      box-shadow: 0 0 0 3px rgba(115,9,13,0.08);
+      background: white;
+    }
+
+    .toggle-pw {
+      position: absolute;
+      right: 14px; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      cursor: pointer;
+      color: var(--text2);
+      display: flex; align-items: center;
+      padding: 0;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, var(--red-dark), var(--red-light));
+      color: white;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.2s, transform 0.15s;
+      box-shadow: 0 4px 16px rgba(115,9,13,0.3);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+
+    .btn-login:hover { opacity: 0.93; transform: translateY(-1px); }
+    .btn-login:active { transform: translateY(0); }
+    .btn-login:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+    .error-box {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .error-box.show { display: flex; }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text2);
+    }
+
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">
+    <div class="logo-icon">
+      <span class="material-icons">account_balance</span>
+    </div>
+    <div class="logo-text">
+      <h1>Sejarah Indonesia<br>Admin</h1>
+      <p>Dashboard Pengelola</p>
+    </div>
+  </div>
+  <div class="divider"></div>
+
+  <h2>Masuk ke Akun</h2>
+  <p class="subtitle">Selamat Datang Kembali!</p>
+
+  <div class="error-box" id="error-box">
+    <span class="material-icons" style="font-size:16px">error_outline</span>
+    <span id="error-msg">Email atau kata sandi salah.</span>
+  </div>
+
+  <div class="form-group">
+    <label for="email">Alamat Email</label>
+    <input type="email" id="email" placeholder="admin@gmail.com" autocomplete="email">
+  </div>
+
+  <div class="form-group">
+    <label for="password">Kata Sandi</label>
+    <div class="input-wrap">
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+      <button class="toggle-pw" onclick="togglePassword()" type="button">
+        <span class="material-icons" id="pw-icon" style="font-size:20px">visibility</span>
+      </button>
+    </div>
+  </div>
+
+  <button class="btn-login" id="btn-login" onclick="doLogin()">
+    <div class="spinner" id="spinner"></div>
+    <span id="btn-text">Masuk</span>
+  </button>
+
+  <div class="footer-note">
+    Hanya untuk admin yang berwenang
+  </div>
+</div>
+
+<script src="js/config.js"></script>
+<script>
+  // Cek kalau sudah login, langsung ke dashboard
+  (async () => {
+    const { data: { session } } = await sb.auth.getSession();
+    if (session) window.location.href = 'index.html';
+  })();
+
+  function togglePassword() {
+    const input = document.getElementById('password');
+    const icon = document.getElementById('pw-icon');
+    if (input.type === 'password') {
+      input.type = 'text';
+      icon.textContent = 'visibility_off';
+    } else {
+      input.type = 'password';
+      icon.textContent = 'visibility';
+    }
+  }
+
+  async function doLogin() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const errBox = document.getElementById('error-box');
+    const errMsg = document.getElementById('error-msg');
+    const btn = document.getElementById('btn-login');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btn-text');
+
+    // Validasi
+    if (!email || !password) {
+      errMsg.textContent = 'Email dan kata sandi wajib diisi.';
+      errBox.classList.add('show');
+      return;
+    }
+
+    // Loading state
+    btn.disabled = true;
+    spinner.style.display = 'block';
+    btnText.textContent = 'Memproses...';
+    errBox.classList.remove('show');
+
+    try {
+      const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+      if (error) throw error;
+
+      // ✅ Login sukses → ke dashboard
+      window.location.href = 'index.html';
+
+    } catch (err) {
+      errMsg.textContent = 'Email atau kata sandi salah. Coba lagi.';
+      errBox.classList.add('show');
+      btn.disabled = false;
+      spinner.style.display = 'none';
+      btnText.textContent = 'Masuk';
+    }
+  }
+
+  // Enter key untuk submit
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doLogin();
+  });
+</script>
+
+</body>
+</html>
