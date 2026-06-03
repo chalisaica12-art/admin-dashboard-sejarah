@@ -7,13 +7,12 @@ const FORMS = {
     title: 'Tambah / Edit Pengguna',
     table: 'profiles',
     fields: [
-      { name: 'name',     label: 'Nama',     type: 'text',   required: true },
-      { name: 'username', label: 'Username', type: 'text',   required: true },
-      { name: 'email',    label: 'Email',    type: 'email' },
-      { name: 'phone',    label: 'No. HP',   type: 'text' },
-      { name: 'level',    label: 'Level',    type: 'number' },
-      { name: 'xp',       label: 'XP',       type: 'number' },
-      { name: 'stars',    label: 'Bintang',  type: 'number' },
+      { name: 'name',   label: 'Nama',    type: 'text',   required: true },
+      { name: 'email',  label: 'Email',   type: 'email' },
+      { name: 'phone',  label: 'No. HP',  type: 'text' },
+      { name: 'level',  label: 'Level',   type: 'number' },
+      { name: 'xp',     label: 'XP',      type: 'number' },
+      { name: 'stars',  label: 'Bintang', type: 'number' },
     ]
   },
   era: {
