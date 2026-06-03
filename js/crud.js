@@ -197,6 +197,12 @@ async function deleteRow(table, id) {
     if (error) { toast('Gagal hapus: ' + error.message, 'error'); return; }
     toast('Data berhasil dihapus!');
     const pageMap = { profiles: 'users', quizzes: 'eras', materials: 'materials', questions: 'questions', avatars: 'avatars', quiz_scores: 'scores' };
-    navigate(pageMap[tbl] || STATE.currentPage);
+    const targetPage = pageMap[tbl] || STATE.currentPage;
+navigate(targetPage);
+const reloadMap = {
+  profiles: loadUsers, quizzes: loadEras, materials: loadMaterials,
+  questions: loadQuestions, avatars: loadAvatars, quiz_scores: loadScores
+};
+if (reloadMap[tbl]) reloadMap[tbl]();
   });
 }
