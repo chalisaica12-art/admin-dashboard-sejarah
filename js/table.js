@@ -178,7 +178,6 @@ function renderTable(key) {
     users: (r, i) => `<tr>
       <td class="row-num">${start + i + 1}</td>
       <td><strong>${r.name || '-'}</strong></td>
-      <td><span class="badge badge-blue">${r.username || '-'}</span></td>
       <td style="font-size:12px;color:var(--text2)">${r.email || '-'}</td>
       <td><span class="badge badge-gold">Lv ${r.level || 0}</span></td>
       <td>${(r.xp || 0).toLocaleString()} XP</td>
